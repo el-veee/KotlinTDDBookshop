@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
@@ -64,5 +66,25 @@ internal class BookshopTest {
         assertFalse(year2000BookCheck)
 
 
+    }
+
+    @Test()
+    fun `Bookshop throws error if customer attempts to buy book not in shop`() {
+
+        val customer = Customer("Lachlan")
+
+        assertThrows<Bookshop.BookNotFoundError> {
+
+            bookshopUnderTest.sellBook(customer, Book("NonExistentBook", 1000))
+        }
+
+    }
+
+    @Test()
+    fun `Customer receives book if bookshop has it`() {
+
+        val customer = Customer("Lachlan")
+        bookshopUnderTest.sellBook(customer, Book(name="ExampleBook", datePublished=1980))
+        assertContains(customer.ownedBooks, Book("ExampleBook", 1980))
     }
 }
